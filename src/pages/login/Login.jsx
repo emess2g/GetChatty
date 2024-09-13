@@ -18,7 +18,7 @@ const Login = () => {
         <div className="login-forgot">
             <p className="login-toggle">
                 Already have an account 
-                <span>Click Here</span>
+                <span> Click Here</span>
             </p>
         </div>
       </form>
