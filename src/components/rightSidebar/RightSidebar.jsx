@@ -13,7 +13,7 @@ const RightSidebar = () => {
        <hr />
        <div className="rs-media">
         <p>Media</p>
-        <div className="">
+        <div >
           <img src={assets.pic1} alt="" />
           <img src={assets.pic2} alt="" />
           <img src={assets.pic3} alt="" />
