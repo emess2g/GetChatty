@@ -18,6 +18,13 @@ const ChatBox = () => {
                 <p>2:30 PM</p>
             </div>
          </div>
+         <div className="s-msg">
+            <img className='msg-img' src={assets.pic1} alt="" />
+            <div>
+                <img src={assets.profile_img} alt="" />
+                <p>2:30 PM</p>
+            </div>
+         </div>
          <div className="r-msg">
             <p className="msg">Lorem ipsum is placeholder text commonly used in ..</p>
             <div>
