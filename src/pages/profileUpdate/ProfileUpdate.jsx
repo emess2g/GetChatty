@@ -11,6 +11,7 @@ const ProfileUpdate = () => {
         <form action="">
           <h3>Profile Update</h3>
           <label htmlFor="avatar">
+            {/* image picker */}
              <input onChange={(e) => setImage(e.target.files[0])} type="file" id='avatar' accept='.png, .jpg, .jpeg' hidden />
              <img src={image ? URL.createObjectURL(image) : assets.avatar_icon} alt="" />
               upload profile image
