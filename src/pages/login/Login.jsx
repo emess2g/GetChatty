@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './Login.css'
 import assets from '../../assets/assets'
-import { signup } from '../../config/firebase';
+import { signup, login } from '../../config/firebase';
 const Login = () => {
     const [currState, setCurrState] = useState("Sign up");
     const [userName, setUserName] = useState('');
