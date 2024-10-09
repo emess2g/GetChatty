@@ -14,22 +14,26 @@ const AppContextProvider = (props) => {
         try {
             const userRef = doc(db, 'users', uid)
             const userSnap = await getDoc(userRef);
-            const userData = userSnap.data
+            const userData = userSnap.data( )
             setUserData(userData)
             if(userData.avatar && userData.name){
                   navigate('/chat')
+            }else{
+                navigate('/profile')
             }
-        } catch (error) {
-            navigate('/profile')
+            await updateDoc(userRef,{
+                lastSeen:Date.now()
+            })
+            setInterval(async () => {
+                if(auth.chatUser){
+                    await updateDoc(userRef,{
+                        lastSeen:Date.now()
+                    })
+                }
+            }, 6000);
+        } catch (error) { 
+            
         }
-        await updateDoc(userRef,{
-            lastSeen:Date.now()
-        })
-        setInterval(async () => {
-            if(auth.chatUser){
-                
-            }
-        })
      }
 
     const value = {
