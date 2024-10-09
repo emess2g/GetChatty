@@ -18,7 +18,7 @@ const ProfileUpdate = () => {
        if(user) {
         setUid(user.uid)
         const docRef = doc(db, "user", user.uid);
-        const docSnap = getDoc(docRef);
+        const docSnap = await getDoc(docRef);
         if(docSnap.data().name) {
           setName(docSnap.data().name);
         }
