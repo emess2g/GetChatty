@@ -20,9 +20,10 @@ const db = getFirestore(app)
 
 const signup = async (username,email,password) => {
     try {
-         const res = await createUserWithEmailAndPassword(auth, email, password)
+         const res = await createUserWithEmailAndPassword(auth, email, password) // create user data
          const user = res.user;
          await setDoc(doc(db,'users',user.uid), {
+            // stores user data 
             id:user.uid,
             username:username.toLowerCase(),
             email,
@@ -51,10 +52,10 @@ const login = async (email,password) => {
 
 const logout = async () => {
     try {
-        signOut(auth)
+       await signOut(auth)
     } catch (error) {
         toast.error(error.code.split('/')[1].split('-').join(" ")); 
     }
 }
 
-export {signup,login, logout, db};
+export {signup,login,logout,auth,db};
