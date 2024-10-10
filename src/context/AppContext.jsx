@@ -1,5 +1,5 @@
-import { doc, getDoc , updateDoc} from "firebase/firestore";
-import { createContext, useState } from "react";
+import { doc, getDoc , onSnapshot, updateDoc} from "firebase/firestore";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth , db} from "../config/firebase";
 
@@ -7,7 +7,7 @@ export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
      const navigate = useNavigate()
-     const [userDate, setUserData] = useState(null);
+     const [userData, setUserData] = useState(null);
      const [chatData, setChatData] = useState(null);
 
      const loadUserData = async (uid) => {
@@ -37,11 +37,30 @@ const AppContextProvider = (props) => {
      }
 
     const value = {
-        userDate,setUserData,
+        userData,setUserData,
         chatData,setChatData,
         loadUserData
     };
-
+    
+    useEffect(() =>{
+        if (userData) {
+            const chatRef = doc(db, 'chats', userData.uid )
+            const unSub = onSnapshot(chatRef, async (res) => {
+                const chatItems = res.data().chatsData;
+                const tempData = []
+                for (const item of chatItems){
+                     const userRef = doc(db, 'users' , item.rId);
+                     const userSnap = await getDoc(userRef);
+                     const userData = userSnap.data();
+                     tempData.push({...item,userData})
+                }
+                setChatData(tempData.sort((a,b) => b.updateAt - a.updateAt))
+            })
+            return () => {
+                unSub()
+            }
+        }
+    },[userData])
     return ( 
         <AppContext.Provider value={value}>
             {props.children}
