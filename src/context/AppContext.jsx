@@ -44,7 +44,7 @@ const AppContextProvider = (props) => {
     
     useEffect(() =>{
         if (userData) {
-            const chatRef = doc(db, 'chats', userData.uid )
+            const chatRef = doc(db, 'chats', userData.id )
             const unSub = onSnapshot(chatRef, async (res) => {
                 const chatItems = res.data().chatsData;
                 const tempData = []

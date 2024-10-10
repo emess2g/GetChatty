@@ -2,8 +2,23 @@ import React from 'react'
 import './LeftSidebar.css'
 import assets from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 const LeftSidebar = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const inputHandler = async(e) => {
+    try {
+      const input = e.target.value;
+      const userRef = collection(db, 'users');
+      const q = query(userRef,where('username','==',input.toLowerCase()));
+      const queySnap = await getDocs(q);
+      if(!queySnap.empty){
+        console.log(queySnap.docs[0].data());
+        
+      }
+    } catch (error) {
+      
+    }
+  }
   return (
     <div className='ls'>
       <div className="ls-top">
@@ -20,7 +35,7 @@ const LeftSidebar = () => {
         </div>
         <div className="ls-search">
             <img src={assets.search_icon}  alt="" />
-            <input type="text" placeholder='search...' />
+            <input onChange={inputHandler} type="text" placeholder='search...' />
         </div>
       </div>
       <div className="ls-list">
