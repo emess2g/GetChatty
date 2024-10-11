@@ -42,7 +42,10 @@ const AppContextProvider = (props) => {
     const value = {
         userData,setUserData,
         chatData,setChatData,
-        loadUserData
+        loadUserData,
+        messagesId, setMessagesId,
+        messages, setMessages,
+        chatUser, setChatUser   
     };
     
     useEffect(() =>{

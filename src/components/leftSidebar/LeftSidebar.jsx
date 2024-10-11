@@ -43,9 +43,8 @@ const LeftSidebar = () => {
   }
 
   const setChat = async(item) => {
-     setMessagesId(item.messageId);
-     setChatUser(item)
-     
+     setMessagesId(item.messagesId);
+     setChatUser(item)  
   }
 
   const addChat = async() => {
