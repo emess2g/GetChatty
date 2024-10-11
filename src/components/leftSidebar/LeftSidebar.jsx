@@ -1,21 +1,32 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import './LeftSidebar.css'
 import assets from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
 import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from '../../config/firebase'
+import { AppContext } from '../../context/AppContext'
+ 
 const LeftSidebar = () => {
   const navigate = useNavigate();
+  const {userData} = useContext(AppContext)
+  const [user, setUser] = useState(null);
+  const [showSearch, setShowSearch] = useState(false);
 
   const inputHandler = async(e) => {
     try {
       const input = e.target.value;
-      const userRef = collection(db,'users');
-      const q = query(userRef,where("username","==",input.toLowerCase()));
-      const queySnap = await getDocs(q);
-      if(!queySnap.empty){
-        console.log(queySnap.docs[0].data());
-        
+      if (input) {
+        setShowSearch(true)
+        const userRef = collection(db,'users');
+        const q = query(userRef,where("username","==",input.toLowerCase()));
+        const queySnap = await getDocs(q);
+        if(!queySnap.empty && queySnap.docs[0].data().id !== userData.id){
+          setUser(queySnap.docs[0].data());       
+        } else{
+          setUser(null);
+        }
+      } else{
+        setShowSearch(false)
       }
     } catch (error) {
       
@@ -41,7 +52,13 @@ const LeftSidebar = () => {
         </div>
       </div>
       <div className="ls-list">
-        {Array(12).fill("").map((item, index) => ( 
+        {showSearch && user ? 
+         <div className='friends'>
+            <img src={user.avatar} alt="" />
+            <p>{user.name}</p>
+         </div>: 
+         <div>
+          {   Array(12).fill("").map((item, index) => ( 
                   <div key={index} className="friends">
                   <img src={assets.profile_img} alt="" />
                   <div className="">
@@ -50,6 +67,8 @@ const LeftSidebar = () => {
                   </div>
               </div>
          ))}
+          </div>}
+        
       </div>
     </div>
   )
