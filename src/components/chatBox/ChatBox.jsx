@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { db } from '../../config/firebase'
 const ChatBox = () => {
 
-  const {userData,messagesId,chatUser,messages,setMessages} = useContext(AppContext);
+  const {userData,messagesId,chatUser,messages,setMessages} = useContext(AppContext);   
   const [input,setInput] = useState('') 
    
   const sendMessage = async() => {
@@ -37,7 +37,7 @@ const ChatBox = () => {
             }
             await updateDoc(userChatsRef,{
               chatsData:userChatData.chatsData 
-            })
+            }) 
           }
         })
       }
@@ -45,7 +45,20 @@ const ChatBox = () => {
      } catch (error) {
        toast.error(error.message)
      }
+     setInput("")
   }
+
+  const convertTimeStamp = (timestamp) => {
+     let date = timestamp.toDate();
+     const hours = date.getHours();
+     const minute = date.getMinutes();
+     if(hours> 12){
+      return hours- 12 + ":" + minute + 'PM'
+     } else {
+       return hours + ":" + minute + "AM"
+     }
+  }
+
   useEffect(() => {
     if (messagesId ) {
       const unSub = onSnapshot(doc(db,'messages',messagesId),(res) =>{
@@ -67,14 +80,17 @@ const ChatBox = () => {
       </div>
 
       <div className="chat-msg">
-         <div className="s-msg">
-            <p className="msg">Lorem ipsum is placeholder text commonly used in ..</p>
-            <div>
-                <img src={assets.profile_img} alt="" />
-                <p>2:30 PM</p>
-            </div>
-         </div>
-         <div className="s-msg">
+        {messages.map((msg,index) =>(
+             <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
+             <p className="msg">{msg.text}</p>
+             <div>
+                 <img src={msg.Id === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
+                 <p>{convertTimeStamp(msg.createdAt)}</p>
+             </div>
+          </div>
+        ))}
+      
+         {/* <div className="s-msg">
             <img className='msg-img' src={assets.pic1} alt="" />
             <div>
                 <img src={assets.profile_img} alt="" />
@@ -87,7 +103,7 @@ const ChatBox = () => {
                 <img src={assets.profile_img} alt="" />
                 <p>2:30 PM</p>
             </div>
-         </div>
+         </div> */}
       </div>
 
 

@@ -4,6 +4,8 @@ import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, si
 import { doc, getFirestore, setDoc} from 'firebase/firestore'
 import { toast } from "react-toastify";
 
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyA0aSmSTOzMdSGrXrb7VnyWDS5AjISuRH4",
   authDomain: "getchatty-4187d.firebaseapp.com",
