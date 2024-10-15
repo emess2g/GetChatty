@@ -4,10 +4,12 @@ import assets from '../../assets/assets'
 import { AppContext } from '../../context/AppContext'
 import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
+import { db } from '../../config/firebase'
 const ChatBox = () => {
 
   const {userData,messagesId,chatUser,messages,setMessages} = useContext(AppContext);
   const [input,setInput] = useState('') 
+   
   const sendMessage = async() => {
      try {     
       if (input && messagesId) {
@@ -46,14 +48,16 @@ const ChatBox = () => {
   }
   useEffect(() => {
     if (messagesId ) {
-      const unSub = onSnapshot(doc(db, 'messages', messagesId), (res) => {
-        setMessages(res.data.messages.reverse())
+      const unSub = onSnapshot(doc(db,'messages',messagesId),(res) =>{
+        setMessages(res.data().messages.reverse())
+        console.log(res.data().messages.reverse());     
       } )
-      return () => {
+      return ()=>{
         unSub();
       }
     }
-  },[messagesId])
+  },[messagesId]);
+  
   return chatUser ? (
     <div className='chat-box'>
       <div className="chat-user">
@@ -93,7 +97,7 @@ const ChatBox = () => {
         <label htmlFor="image">
             <img src={assets.gallery_icon} alt="" />
         </label>
-        <img src={assets.send_button} alt="" />
+        <img onClick={sendMessage} src={assets.send_button} alt="" />
       </div>
     </div>
   ) :

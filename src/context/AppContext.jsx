@@ -17,7 +17,8 @@ const AppContextProvider = (props) => {
         try {
             const userRef = doc(db, 'users', uid)
             const userSnap = await getDoc(userRef);
-            const userData = userSnap.data( )
+            const userData = userSnap.data()
+            // console.log(userData.avatar);           
             setUserData(userData)
             if(userData.avatar && userData.name){
                   navigate('/chat')

@@ -42,9 +42,10 @@ const LeftSidebar = () => {
     }
   }
 
-  const setChat = async(item) => {
-     setMessagesId(item.messagesId);
-     setChatUser(item)  
+  const setChat = async (item) => {
+     setMessagesId(item.messageId)
+     console.log(item.userData)
+     
   }
 
   const addChat = async() => {
@@ -55,7 +56,7 @@ const LeftSidebar = () => {
 
       await setDoc(newMessageRef, {
         createAt:serverTimestamp(),
-        messages:[]
+        messages:[] 
       })
 
       await updateDoc(doc(chatRef, user.id),{
@@ -84,6 +85,9 @@ const LeftSidebar = () => {
        
      }
   }
+  // console.log(userData);
+  console.log(chatData);
+  
   
   return (
     <div className='ls'>
@@ -103,21 +107,20 @@ const LeftSidebar = () => {
             <img src={assets.search_icon}  alt="" />
             <input onChange={inputHandler} type="text" placeholder='search...' />
         </div>
-      </div>
+      </div> 
       <div className="ls-list">
         {showSearch && user ? 
          <div onClick={addChat} className='friends'>
             <img src={user.avatar} alt="" />
             <p>{user.name}</p>
-         </div>
-         : chatData.map((item,index) => ( 
-          <div onClick={() => setChat(item)} key={index} className="friends">
-          <img src={item.userData.avatar} alt="" />
-          <div className="">
-              <p>{item.userData.name}</p>
-              <span>{item.lastMessage}</span>
-          </div>
-       </div>
+         </div> : chatData.map((item, index) => (
+                <div onClick={() => setChat(item)} key={index} className="friends">
+                   <img src={item.userData.avatar} alt="" />
+                    <div className="">
+                       <p>{item.userData.name}</p>
+                       <span>{item.lastMessage}</span>
+                    </div>  
+                 </div>
          ))
          }  
       </div>
