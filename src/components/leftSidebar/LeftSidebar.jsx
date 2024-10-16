@@ -6,7 +6,7 @@ import {
   arrayUnion,
   collection,
   doc,
-  getDocs,
+  getDoc ,
   query,
   serverTimestamp,
   setDoc,
@@ -37,16 +37,16 @@ const LeftSidebar = () => {
         setShowSearch(true);
         const userRef = collection(db, "users");
         const q = query(userRef, where("username", "==", input.toLowerCase()));
-        const querySnap = await getDocs(q);
-        if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
+        const querySnap = await getDoc(q);
+        if (!querySnap.empty && querySnap.doc[0].data().id !== userData.id) {
           let userExist = false;
           chatData.map((user) => {
-            if (user.rId === querySnap.docs[0].data().id) {
+            if (user.rId === querySnap.doc[0].data().id) {
               userExist = true;
             }
           });
           if (!userExist) {
-            setUser(querySnap.docs[0].data());
+            setUser(querySnap.doc[0].data());
           }
         } else {
           setUser(null);
@@ -54,12 +54,26 @@ const LeftSidebar = () => {
       } else {
         setShowSearch(false);
       }
-    } catch (error) {}
+    } catch (error) {
+      // toast.error(error.message)
+    }
   };
 
   const setChat = async (item) => {
-    setMessagesId(item.messageId);
-    setChatUser(item);
+     try {
+      setMessagesId(item.messageId);
+      setChatUser(item);
+      const userChatsRef = doc(db,'chats',userData.id);
+      const userChatsSnapshot = await getDoc(userChatsRef);
+      const userChatsData = userChatsSnapshot.data();
+      const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === item.messageId);
+      userChatsData.chatsData[chatIndex].messageSeen = true;
+      await updateDoc(userChatsRef, {
+        chatsData: userChatsData.chatsData
+      })
+     } catch (error) {
+      toast.error(error.message)
+     }
   };
 
   const addChat = async () => {
@@ -84,7 +98,7 @@ const LeftSidebar = () => {
       });
 
       await updateDoc(doc(chatRef, userData.id), {
-        chatsData: arrayUnion({
+          chatsData: arrayUnion({
           messageId: newMessageRef.id,
           lastMessage: "",
           rId: user.id,
