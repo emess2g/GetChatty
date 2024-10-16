@@ -119,14 +119,14 @@ const ChatBox = () => {
       </div>
 
       <div className="chat-msg">
-        {messages.map((msg,index) =>(
+        {messages.map((msg,index) =>( 
              <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
               {msg["image"] 
               ? <img className='msg-img' src={msg.image} />
               : <p className="msg">{msg.text}</p>
               }         
              <div>
-                 <img src={msg.Id === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
+                 <img src={msg.sId === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
                  <p>{convertTimeStamp(msg.createdAt)}</p>
              </div>
           </div>
